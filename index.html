@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="theme-color" content="#0d1117"/>
+<meta name="description" content="Jasoos — The ultimate spy party game. Play with friends, no account needed. Works offline."/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Jasoos"/>
+<title>Jasoos · جاسوس — The Spy Party Game</title>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icons/icon-192.png"/>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0d1117; --bg2:#161b24; --bg3:#1e2530;
+  --gold:#c8a84b; --gold2:#e8c96b; --gold-dim:rgba(200,168,75,0.12);
+  --red:#d94f4f; --green:#4caf7d;
+  --text:#e8e0d0; --text-dim:rgba(232,224,208,0.55);
+  --border:rgba(200,168,75,0.2);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.6;overflow-x:hidden;}
+
+/* Noise */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:999;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:.35;}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 24px;
+  background:rgba(13,17,23,0.85);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:4px;color:var(--gold);}
+.nav-links{display:flex;gap:24px;align-items:center;}
+.nav-links a{color:var(--text-dim);text-decoration:none;font-size:13px;letter-spacing:1px;transition:color .2s;}
+.nav-links a:hover{color:var(--gold);}
+.nav-cta{
+  padding:8px 20px;border-radius:8px;
+  background:var(--gold);color:var(--bg);
+  font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;
+  text-decoration:none;transition:background .2s;
+}
+.nav-cta:hover{background:var(--gold2);color:var(--bg)!important;}
+
+/* ── INSTALL BANNER ── */
+#install-banner{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:var(--bg2);border-top:1px solid var(--border);
+  padding:16px 24px;
+  flex-direction:column;gap:10px;
+  backdrop-filter:blur(8px);
+}
+.install-banner-row{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.install-banner-icon{font-size:28px;}
+.install-banner-text{flex:1;}
+.install-banner-text strong{display:block;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:var(--gold);}
+.install-banner-text span{font-size:12px;color:var(--text-dim);}
+.install-btn{padding:10px 20px;border-radius:8px;background:var(--gold);color:var(--bg);font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;border:none;cursor:pointer;}
+.install-dismiss{background:transparent;border:none;color:var(--text-dim);font-size:20px;cursor:pointer;padding:4px;}
+
+/* ── HERO ── */
+#hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;
+  padding:120px 24px 80px;
+  background:radial-gradient(ellipse at 30% 20%,rgba(26,34,51,0.9) 0%,var(--bg) 65%),
+             radial-gradient(ellipse at 80% 80%,rgba(30,25,40,0.7) 0%,transparent 60%);
+  position:relative;overflow:hidden;
+}
+.hero-eye{font-size:72px;margin-bottom:20px;animation:blink 4s infinite;}
+@keyframes blink{0%,88%,100%{opacity:1}94%{opacity:0}}
+.hero-en{font-family:'Bebas Neue',sans-serif;font-size:clamp(80px,18vw,140px);letter-spacing:10px;color:var(--gold);line-height:1;text-shadow:0 0 80px rgba(200,168,75,0.35);}
+.hero-ar{font-family:'Amiri',serif;font-size:clamp(48px,10vw,80px);color:var(--text);opacity:.75;line-height:1.3;margin-bottom:12px;}
+.hero-sub{font-size:14px;color:var(--text-dim);letter-spacing:4px;text-transform:uppercase;margin-bottom:40px;}
+.hero-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:48px;}
+.pill{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--gold-dim);color:var(--text-dim);font-size:12px;letter-spacing:1px;}
+.hero-btns{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;}
+.btn-main{
+  padding:18px 40px;border-radius:12px;
+  background:var(--gold);color:var(--bg);
+  font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;
+  text-decoration:none;border:none;cursor:pointer;
+  transition:all .2s;display:inline-flex;align-items:center;gap:10px;
+}
+.btn-main:hover{background:var(--gold2);transform:translateY(-2px);}
+.btn-ghost{
+  padding:18px 32px;border-radius:12px;
+  background:transparent;color:var(--text-dim);
+  font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;
+  text-decoration:none;border:1.5px solid var(--border);
+  transition:all .2s;
+}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold);}
+
+/* hero bg deco */
+.hero-glow{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(200,168,75,0.06) 0%,transparent 70%);top:-100px;right:-100px;pointer-events:none;}
+.hero-glow2{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(100,80,200,0.05) 0%,transparent 70%);bottom:0;left:-100px;pointer-events:none;}
+
+/* ── STATS STRIP ── */
+.stats-strip{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:0;
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  background:var(--bg2);
+}
+.stat{
+  flex:1;min-width:120px;text-align:center;
+  padding:28px 20px;
+  border-right:1px solid var(--border);
+}
+.stat:last-child{border-right:none;}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:44px;color:var(--gold);line-height:1;}
+.stat-lbl{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-top:4px;}
+
+/* ── SECTION ── */
+section{padding:80px 24px;max-width:860px;margin:0 auto;}
+section.full-width{max-width:none;padding-left:0;padding-right:0;}
+.section-label{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,52px);letter-spacing:3px;color:var(--text);margin-bottom:10px;line-height:1.1;}
+.section-title-ar{font-family:'Amiri',serif;font-size:clamp(22px,4vw,32px);color:var(--text-dim);margin-bottom:36px;}
+
+/* ── HOW IT WORKS ── */
+.steps{display:flex;flex-direction:column;gap:0;border:1px solid var(--border);border-radius:20px;overflow:hidden;}
+.step{display:flex;align-items:flex-start;gap:20px;padding:24px 28px;border-bottom:1px solid var(--border);background:var(--bg2);transition:background .2s;}
+.step:last-child{border-bottom:none;}
+.step:hover{background:var(--bg3);}
+.step-num{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--gold);opacity:.5;min-width:42px;line-height:1;}
+.step-body strong{display:block;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--text);margin-bottom:4px;}
+.step-body p{font-size:14px;color:var(--text-dim);}
+.step-body .ar{font-family:'Amiri',serif;font-size:13px;color:var(--text-dim);opacity:.7;margin-top:2px;}
+
+/* ── FEATURES ── */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;}
+.feature-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px;transition:border-color .2s,transform .2s;}
+.feature-card:hover{border-color:var(--gold);transform:translateY(-3px);}
+.feature-icon{font-size:32px;margin-bottom:12px;}
+.feature-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--text);margin-bottom:6px;}
+.feature-desc{font-size:13px;color:var(--text-dim);line-height:1.7;}
+
+/* ── CATEGORIES DEMO ── */
+.cat-scroll{display:flex;gap:12px;padding:0 24px;overflow-x:auto;padding-bottom:8px;}
+.cat-scroll::-webkit-scrollbar{height:4px;}
+.cat-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.cat-chip{
+  flex-shrink:0;
+  padding:14px 20px;border-radius:12px;
+  border:1.5px solid var(--border);background:var(--bg2);
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  min-width:90px;
+  transition:border-color .2s,background .2s;
+}
+.cat-chip:hover{border-color:var(--gold);background:var(--gold-dim);}
+.cat-chip span:first-child{font-size:28px;}
+.cat-chip .cat-en{font-size:12px;color:var(--text-dim);letter-spacing:1px;}
+.cat-chip .cat-ar{font-family:'Amiri',serif;font-size:14px;color:var(--text-dim);}
+
+/* ── CTA ── */
+#cta{
+  text-align:center;
+  padding:100px 24px;
+  background:radial-gradient(ellipse at 50% 50%,rgba(26,34,51,0.9) 0%,var(--bg) 70%);
+  border-top:1px solid var(--border);
+}
+#cta .hero-en{font-size:clamp(48px,10vw,90px);}
+#cta p{font-size:16px;color:var(--text-dim);margin:16px 0 40px;max-width:420px;margin-left:auto;margin-right:auto;}
+
+/* ── FOOTER ── */
+footer{
+  border-top:1px solid var(--border);
+  padding:32px 24px;
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
+  gap:16px;
+  background:var(--bg2);
+}
+.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:4px;color:var(--gold);}
+.footer-links{display:flex;gap:20px;}
+.footer-links a{color:var(--text-dim);text-decoration:none;font-size:13px;transition:color .2s;}
+.footer-links a:hover{color:var(--gold);}
+.footer-copy{font-size:12px;color:var(--text-dim);width:100%;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .nav-links{display:none;}
+  .stats-strip{flex-wrap:wrap;}
+  .stat{min-width:50%;}
+}
+
+/* ── FADE IN ── */
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s,transform .6s;}
+.fade-in.visible{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<!-- INSTALL BANNER -->
+<div id="install-banner">
+  <div class="install-banner-row">
+    <div class="install-banner-icon">🕵️</div>
+    <div class="install-banner-text">
+      <strong>INSTALL JASOOS</strong>
+      <span>Add to home screen for offline play</span>
+    </div>
+    <button class="install-btn" id="install-btn">Install</button>
+    <button class="install-dismiss" id="install-dismiss">✕</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">🕵️ JASOOS</div>
+  <div class="nav-links">
+    <a href="#how">How to Play</a>
+    <a href="#features">Features</a>
+    <a href="#categories">Categories</a>
+    <a class="nav-cta" href="jasoos-1.html">Open App →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-eye">🕵️</div>
+  <div class="hero-en">JASOOS</div>
+  <div class="hero-ar">جاسوس</div>
+  <div class="hero-sub">The Spy Party Game</div>
+  <div class="hero-pills">
+    <span class="pill">No account</span>
+    <span class="pill">No ads</span>
+    <span class="pill">Works offline</span>
+    <span class="pill">Free forever</span>
+    <span class="pill">Arabic & English</span>
+  </div>
+  <div class="hero-btns">
+    <a class="btn-main" href="jasoos-1.html">🎮 Play Now</a>
+    <button class="btn-ghost" id="hero-install-btn" style="display:none">⬇️ Install App</button>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stat fade-in"><div class="stat-num">12</div><div class="stat-lbl">Categories</div></div>
+  <div class="stat fade-in"><div class="stat-num">150+</div><div class="stat-lbl">Secret Words</div></div>
+  <div class="stat fade-in"><div class="stat-num">0</div><div class="stat-lbl">Ads or Logins</div></div>
+  <div class="stat fade-in"><div class="stat-num">∞</div><div class="stat-lbl">Free, forever</div></div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-label fade-in">How to Play</div>
+  <div class="section-title fade-in">Simple by design.</div>
+  <div class="section-title-ar fade-in">بسيط من حيث التصميم</div>
+  <div class="steps fade-in">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-body">
+        <strong>SETUP THE GAME</strong>
+        <p>Choose player count, number of spies, question rounds, and a word category.</p>
+        <span class="ar">اختر عدد اللاعبين والجواسيس والفئة</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-body">
+        <strong>PEEK YOUR ROLE</strong>
+        <p>Each player holds & lifts the card to peek their role — spy or player. Release to hide it.</p>
+        <span class="ar">كل لاعب يرفع البطاقة ليرى دوره ثم يتركها</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-body">
+        <strong>QUESTION ROUNDS</strong>
+        <p>Players ask each other about the secret word. Spies must bluff without knowing the word.</p>
+        <span class="ar">يسأل اللاعبون بعضهم عن الكلمة السرية</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-body">
+        <strong>VOTE & ELIMINATE</strong>
+        <p>Everyone votes on who they think is the spy. Most votes = eliminated.</p>
+        <span class="ar">يصوّت الجميع على من يظنونه الجاسوس</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">05</div>
+      <div class="step-body">
+        <strong>LAST CHANCE</strong>
+        <p>Caught spies get one final shot: guess the secret word to still win.</p>
+        <span class="ar">الجاسوس المكشوف يحصل على فرصة أخيرة لتخمين الكلمة</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-label fade-in">Features</div>
+  <div class="section-title fade-in">Everything you need.</div>
+  <div class="section-title-ar fade-in">كل ما تحتاجه</div>
+  <div class="features-grid fade-in">
+    <div class="feature-card">
+      <div class="feature-icon">🎴</div>
+      <div class="feature-title">DRAG-TO-PEEK</div>
+      <div class="feature-desc">A satisfying card mechanic — drag up to reveal your role, release to hide it. No tapping through awkward menus.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌍</div>
+      <div class="feature-title">BILINGUAL</div>
+      <div class="feature-desc">Full Arabic and English support, RTL layout included. Switch languages at any time from the main menu.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <div class="feature-title">OFFLINE READY</div>
+      <div class="feature-desc">Install as a PWA and play anywhere — no internet needed. Everything runs on-device.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🕵️</div>
+      <div class="feature-title">MULTIPLE SPIES</div>
+      <div class="feature-desc">Configure 1 or more spies for a harder game. Balance the tension against your group size.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌙</div>
+      <div class="feature-title">DARK / LIGHT MODE</div>
+      <div class="feature-desc">Toggle between a dark spy aesthetic and a bright daytime mode directly from the main menu.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎲</div>
+      <div class="feature-title">12 CATEGORIES</div>
+      <div class="feature-desc">From food and animals to movies and video games — pick a category or let it randomize.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section id="categories" class="full-width" style="padding-top:0;padding-bottom:80px;">
+  <div style="max-width:860px;margin:0 auto;padding:0 24px;">
+    <div class="section-label fade-in">Categories</div>
+    <div class="section-title fade-in">150+ secret words.</div>
+    <div class="section-title-ar fade-in" style="margin-bottom:24px;">أكثر من 150 كلمة سرية</div>
+  </div>
+  <div class="cat-scroll fade-in">
+    <div class="cat-chip"><span>🎲</span><span class="cat-en">RANDOM</span><span class="cat-ar">عشوائي</span></div>
+    <div class="cat-chip"><span>🌍</span><span class="cat-en">PLACES</span><span class="cat-ar">أماكن</span></div>
+    <div class="cat-chip"><span>📦</span><span class="cat-en">OBJECTS</span><span class="cat-ar">أشياء</span></div>
+    <div class="cat-chip"><span>🐾</span><span class="cat-en">ANIMALS</span><span class="cat-ar">حيوانات</span></div>
+    <div class="cat-chip"><span>👗</span><span class="cat-en">CLOTHES</span><span class="cat-ar">ملابس</span></div>
+    <div class="cat-chip"><span>💼</span><span class="cat-en">JOBS</span><span class="cat-ar">مهن</span></div>
+    <div class="cat-chip"><span>🍕</span><span class="cat-en">FOOD</span><span class="cat-ar">طعام</span></div>
+    <div class="cat-chip"><span>🎮</span><span class="cat-en">GAMES</span><span class="cat-ar">ألعاب</span></div>
+    <div class="cat-chip"><span>🎬</span><span class="cat-en">MOVIES</span><span class="cat-ar">أفلام</span></div>
+    <div class="cat-chip"><span>🏢</span><span class="cat-en">COMPANIES</span><span class="cat-ar">شركات</span></div>
+    <div class="cat-chip"><span>⚽</span><span class="cat-en">SPORTS</span><span class="cat-ar">رياضة</span></div>
+    <div class="cat-chip"><span>🎵</span><span class="cat-en">MUSIC</span><span class="cat-ar">موسيقى</span></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div id="cta">
+  <div class="hero-eye" style="font-size:56px;margin-bottom:16px;">🕵️</div>
+  <div class="hero-en fade-in">YOUR MOVE</div>
+  <div class="hero-ar fade-in" style="font-size:clamp(30px,6vw,50px);">هيا نلعب</div>
+  <p class="fade-in">Free. No account. Works on any phone. Pass it around the table and play.</p>
+  <div class="hero-btns fade-in">
+    <a class="btn-main" href="jasoos-1.html">🎮 Open Jasoos</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">🕵️ JASOOS · جاسوس</div>
+  <div class="footer-links">
+    <a href="jasoos-1.html">Open App</a>
+    <a href="#how">How to Play</a>
+  </div>
+  <div class="footer-copy">Built free, for everyone · No account · No ads · Works offline</div>
+</footer>
+
+<script>
+// ── PWA Install ──
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();
+  deferredPrompt=e;
+  document.getElementById('install-banner').style.display='flex';
+  document.getElementById('hero-install-btn').style.display='inline-flex';
+});
+function doInstall(){
+  if(!deferredPrompt)return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(()=>{deferredPrompt=null;hideBanner();});
+}
+function hideBanner(){
+  document.getElementById('install-banner').style.display='none';
+}
+document.getElementById('install-btn').addEventListener('click',doInstall);
+document.getElementById('hero-install-btn').addEventListener('click',doInstall);
+document.getElementById('install-dismiss').addEventListener('click',hideBanner);
+window.addEventListener('appinstalled',hideBanner);
+
+// ── Scroll fade in ──
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.12});
+document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
+
+// ── SW Registration ──
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+</script>
+</body>
+</html>
