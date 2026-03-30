@@ -19,24 +19,52 @@
   --red:#d94f4f; --green:#4caf7d;
   --text:#e8e0d0; --text-dim:rgba(232,224,208,0.55);
   --border:rgba(200,168,75,0.2);
+  --nav-bg:rgba(13,17,23,0.88);
+}
+:root.light{
+  --bg:#f5f0e8; --bg2:#ede8df; --bg3:#e0d9ce;
+  --gold:#a07828; --gold2:#c09838; --gold-dim:rgba(160,120,40,0.12);
+  --text:#1a1410; --text-dim:rgba(26,20,16,0.5);
+  --border:rgba(150,110,30,0.3);
+  --nav-bg:rgba(245,240,232,0.92);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.6;overflow-x:hidden;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.6;overflow-x:hidden;transition:background .3s,color .3s;}
+html[dir="rtl"] body{font-family:'Amiri',serif;}
 
-/* Noise */
+/* ── LIGHT MODE OVERRIDES ── */
+:root.light body::before{opacity:.15;}
+:root.light #hero{
+  background:radial-gradient(ellipse at 30% 20%,rgba(220,210,190,0.9) 0%,var(--bg) 65%),
+             radial-gradient(ellipse at 80% 80%,rgba(200,190,170,0.5) 0%,transparent 60%);
+}
+:root.light #cta{
+  background:radial-gradient(ellipse at 50% 50%,rgba(220,210,190,0.9) 0%,var(--bg) 70%);
+}
+:root.light .stats-strip{background:var(--bg2);}
+:root.light .feature-card:hover{transform:translateY(-3px);}
+:root.light .step:hover{background:var(--bg3);}
+
+/* ── NOISE ── */
 body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:999;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
   opacity:.35;}
+
+/* Light mode hero/cta gradient overrides */
+:root.light #hero{background:radial-gradient(ellipse at 30% 20%,rgba(224,216,200,0.9) 0%,var(--bg) 65%),radial-gradient(ellipse at 80% 80%,rgba(220,215,200,0.7) 0%,transparent 60%);}
+:root.light #cta{background:radial-gradient(ellipse at 50% 50%,rgba(224,216,200,0.9) 0%,var(--bg) 70%);}
+.stats-strip,.feature-card,.step,.cat-chip{transition:background .3s,border-color .3s;}
 
 /* ── NAV ── */
 nav{
   position:fixed;top:0;left:0;right:0;z-index:100;
   display:flex;align-items:center;justify-content:space-between;
   padding:16px 24px;
-  background:rgba(13,17,23,0.85);
+  background:var(--nav-bg);
   backdrop-filter:blur(12px);
   border-bottom:1px solid var(--border);
+  transition:background .3s;
 }
 .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:4px;color:var(--gold);}
 .nav-links{display:flex;gap:24px;align-items:center;}
@@ -49,6 +77,19 @@ nav{
   text-decoration:none;transition:background .2s;
 }
 .nav-cta:hover{background:var(--gold2);color:var(--bg)!important;}
+/* Nav right controls */
+.nav-controls{display:flex;align-items:center;gap:10px;}
+.nav-toggle-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:6px 12px;border-radius:8px;
+  border:1.5px solid var(--border);background:transparent;
+  color:var(--text-dim);font-size:13px;letter-spacing:1px;
+  cursor:pointer;transition:all .2s;white-space:nowrap;
+  font-family:'DM Sans',sans-serif;
+}
+.nav-toggle-btn:hover{border-color:var(--gold);color:var(--gold);}
+.nav-toggle-btn.active{border-color:var(--gold);background:var(--gold-dim);color:var(--gold);}
+html[dir="rtl"] .nav-toggle-btn{font-family:'Amiri',serif;font-size:15px;}
 
 /* ── INSTALL BANNER ── */
 #install-banner{
@@ -84,23 +125,25 @@ nav{
 .hero-sub{font-size:14px;color:var(--text-dim);letter-spacing:4px;text-transform:uppercase;margin-bottom:40px;}
 .hero-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:48px;}
 .pill{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--gold-dim);color:var(--text-dim);font-size:12px;letter-spacing:1px;}
-.hero-btns{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;}
+.hero-btns{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;max-width:340px;}
+.hero-btns-secondary{display:flex;gap:12px;width:100%;}
 .btn-main{
-  padding:18px 40px;border-radius:12px;
+  width:100%;padding:18px 40px;border-radius:12px;
   background:var(--gold);color:var(--bg);
   font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;
   text-decoration:none;border:none;cursor:pointer;
-  transition:all .2s;display:inline-flex;align-items:center;gap:10px;
+  transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:10px;
 }
 .btn-main:hover{background:var(--gold2);transform:translateY(-2px);}
 .btn-ghost{
-  padding:18px 32px;border-radius:12px;
-  background:transparent;color:var(--text-dim);
-  font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;
-  text-decoration:none;border:1.5px solid var(--border);
-  transition:all .2s;
+  flex:1;padding:14px 20px;border-radius:12px;
+  background:transparent;color:var(--gold);
+  font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;
+  text-decoration:none;border:1.5px solid var(--gold);
+  transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  cursor:pointer;
 }
-.btn-ghost:hover{border-color:var(--gold);color:var(--gold);}
+.btn-ghost:hover{background:var(--gold);color:var(--bg);}
 
 /* hero bg deco */
 .hero-glow{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(200,168,75,0.06) 0%,transparent 70%);top:-100px;right:-100px;pointer-events:none;}
@@ -192,6 +235,8 @@ footer{
   .nav-links{display:none;}
   .stats-strip{flex-wrap:wrap;}
   .stat{min-width:50%;}
+  .hero-btns-secondary{flex-direction:column;}
+  .btn-ghost{flex:none;width:100%;}
 }
 
 /* ── FADE IN ── */
@@ -218,10 +263,19 @@ footer{
 <nav>
   <div class="nav-logo">🕵️ JASOOS</div>
   <div class="nav-links">
-    <a href="#how">How to Play</a>
-    <a href="#features">Features</a>
-    <a href="#categories">Categories</a>
-    <a class="nav-cta" href="jasoos-1.html">Open App →</a>
+    <a href="#how" data-en="How to Play" data-ar="كيف تلعب">How to Play</a>
+    <a href="#features" data-en="Features" data-ar="المميزات">Features</a>
+    <a href="#categories" data-en="Categories" data-ar="الفئات">Categories</a>
+    <a class="nav-cta" href="jasoos-1.html" data-en="Open App →" data-ar="افتح اللعبة →">Open App →</a>
+  </div>
+  <div class="nav-controls">
+    <button class="nav-toggle-btn" id="lang-toggle-btn" onclick="toggleLang()" title="Switch language">
+      <span id="lang-toggle-label">ع</span>
+    </button>
+    <button class="nav-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle theme">
+      <span id="theme-toggle-label">☀️</span>
+    </button>
+    <a class="nav-cta" href="jasoos-1.html" data-en="Open App →" data-ar="افتح اللعبة →" style="display:none" id="nav-cta-mobile">Open App →</a>
   </div>
 </nav>
 
@@ -232,71 +286,74 @@ footer{
   <div class="hero-eye">🕵️</div>
   <div class="hero-en">JASOOS</div>
   <div class="hero-ar">جاسوس</div>
-  <div class="hero-sub">The Spy Party Game</div>
+  <div class="hero-sub" data-en="The Spy Party Game" data-ar="لعبة التجسس الجماعية">The Spy Party Game</div>
   <div class="hero-pills">
-    <span class="pill">No account</span>
-    <span class="pill">No ads</span>
-    <span class="pill">Works offline</span>
-    <span class="pill">Free forever</span>
-    <span class="pill">Arabic & English</span>
+    <span class="pill" data-en="No account" data-ar="بدون حساب">No account</span>
+    <span class="pill" data-en="No ads" data-ar="بدون إعلانات">No ads</span>
+    <span class="pill" data-en="Works offline" data-ar="يعمل بدون إنترنت">Works offline</span>
+    <span class="pill" data-en="Free forever" data-ar="مجاني دائماً">Free forever</span>
+    <span class="pill" data-en="Arabic &amp; English" data-ar="عربي وإنجليزي">Arabic &amp; English</span>
   </div>
   <div class="hero-btns">
-    <a class="btn-main" href="jasoos-1.html">🎮 Play Now</a>
-    <button class="btn-ghost" id="hero-install-btn" style="display:none">⬇️ Install App</button>
+    <a class="btn-main" href="jasoos-1.html" data-en="🎮 Play Game" data-ar="🎮 العب الآن">🎮 Play Game</a>
+    <div class="hero-btns-secondary">
+      <button class="btn-ghost" id="hero-install-btn" onclick="doInstall()" data-en="⬇️ Download App" data-ar="⬇️ تحميل اللعبة">⬇️ Download App</button>
+      <a class="btn-ghost" href="https://github.com/kayo-isle/jasoos" target="_blank" rel="noopener" data-en="⭐ See More" data-ar="⭐ المزيد">⭐ See More</a>
+    </div>
   </div>
 </section>
 
 <!-- STATS -->
 <div class="stats-strip">
-  <div class="stat fade-in"><div class="stat-num">12</div><div class="stat-lbl">Categories</div></div>
-  <div class="stat fade-in"><div class="stat-num">150+</div><div class="stat-lbl">Secret Words</div></div>
-  <div class="stat fade-in"><div class="stat-num">0</div><div class="stat-lbl">Ads or Logins</div></div>
-  <div class="stat fade-in"><div class="stat-num">∞</div><div class="stat-lbl">Free, forever</div></div>
+  <div class="stat fade-in"><div class="stat-num">12</div><div class="stat-lbl" data-en="Categories" data-ar="فئة">Categories</div></div>
+  <div class="stat fade-in"><div class="stat-num">150+</div><div class="stat-lbl" data-en="Secret Words" data-ar="كلمة سرية">Secret Words</div></div>
+  <div class="stat fade-in"><div class="stat-num">0</div><div class="stat-lbl" data-en="Ads or Logins" data-ar="إعلانات أو تسجيل">Ads or Logins</div></div>
+  <div class="stat fade-in"><div class="stat-num">∞</div><div class="stat-lbl" data-en="Free, forever" data-ar="مجاني للأبد">Free, forever</div></div>
 </div>
 
 <!-- HOW IT WORKS -->
 <section id="how">
-  <div class="section-label fade-in">How to Play</div>
-  <div class="section-title fade-in">Simple by design.</div>
+  <div class="section-label fade-in" data-en="How to Play" data-ar="كيف تلعب">How to Play</div>
+  <div class="section-title fade-in" data-en="Simple by design." data-ar="بسيط من حيث التصميم">Simple by design.</div>
   <div class="section-title-ar fade-in">بسيط من حيث التصميم</div>
   <div class="steps fade-in">
     <div class="step">
       <div class="step-num">01</div>
       <div class="step-body">
-        <strong>SETUP THE GAME</strong>
-        <p>Choose player count, number of spies, question rounds, and a word category.</p>
+        <strong data-en="SETUP THE GAME" data-ar="إعداد اللعبة">SETUP THE GAME</strong>
+        <p data-en="Choose player count, number of spies, question rounds, and a word category." data-ar="اختر عدد اللاعبين والجواسيس وجولات الأسئلة والفئة.">Choose player count, number of spies, question rounds, and a word category.</p>
         <span class="ar">اختر عدد اللاعبين والجواسيس والفئة</span>
       </div>
     </div>
     <div class="step">
       <div class="step-num">02</div>
       <div class="step-body">
-        <strong>PEEK YOUR ROLE</strong>
-        <p>Each player holds & lifts the card to peek their role — spy or player. Release to hide it.</p>
+        <strong data-en="PEEK YOUR ROLE" data-ar="اكشف دورك">PEEK YOUR ROLE</strong>
+        <p data-en="Each player holds &amp; lifts the card to peek their role — spy or player. Release to hide it." data-ar="كل لاعب يرفع البطاقة ليرى دوره — جاسوس أم لاعب. اتركها لإخفائها.">Each player holds &amp; lifts the card to peek their role — spy or player. Release to hide it.</p>
         <span class="ar">كل لاعب يرفع البطاقة ليرى دوره ثم يتركها</span>
       </div>
     </div>
     <div class="step">
       <div class="step-num">03</div>
       <div class="step-body">
-        <strong>QUESTION ROUNDS</strong>
-        <p>Players ask each other about the secret word. Spies must bluff without knowing the word.</p>
+        <strong data-en="QUESTION ROUNDS" data-ar="جولة الأسئلة">QUESTION ROUNDS</strong>
+        <p data-en="Players ask each other about the secret word. Spies must bluff without knowing the word." data-ar="يسأل اللاعبون بعضهم عن الكلمة السرية. الجاسوس يتظاهر دون أن يعرفها.">Players ask each other about the secret word. Spies must bluff without knowing the word.</p>
         <span class="ar">يسأل اللاعبون بعضهم عن الكلمة السرية</span>
       </div>
     </div>
     <div class="step">
       <div class="step-num">04</div>
       <div class="step-body">
-        <strong>VOTE & ELIMINATE</strong>
-        <p>Everyone votes on who they think is the spy. Most votes = eliminated.</p>
+        <strong data-en="VOTE &amp; ELIMINATE" data-ar="صوّت واحذف">VOTE &amp; ELIMINATE</strong>
+        <p data-en="Everyone votes on who they think is the spy. Most votes = eliminated." data-ar="يصوّت الجميع على من يظنونه الجاسوس. الأكثر أصواتاً يُحذف.">Everyone votes on who they think is the spy. Most votes = eliminated.</p>
         <span class="ar">يصوّت الجميع على من يظنونه الجاسوس</span>
       </div>
     </div>
     <div class="step">
       <div class="step-num">05</div>
       <div class="step-body">
-        <strong>LAST CHANCE</strong>
-        <p>Caught spies get one final shot: guess the secret word to still win.</p>
+        <strong data-en="LAST CHANCE" data-ar="فرصة أخيرة">LAST CHANCE</strong>
+        <p data-en="Caught spies get one final shot: guess the secret word to still win." data-ar="الجاسوس المكشوف يحصل على فرصة أخيرة: خمّن الكلمة السرية للفوز.">Caught spies get one final shot: guess the secret word to still win.</p>
         <span class="ar">الجاسوس المكشوف يحصل على فرصة أخيرة لتخمين الكلمة</span>
       </div>
     </div>
@@ -305,39 +362,39 @@ footer{
 
 <!-- FEATURES -->
 <section id="features">
-  <div class="section-label fade-in">Features</div>
-  <div class="section-title fade-in">Everything you need.</div>
+  <div class="section-label fade-in" data-en="Features" data-ar="المميزات">Features</div>
+  <div class="section-title fade-in" data-en="Everything you need." data-ar="كل ما تحتاجه">Everything you need.</div>
   <div class="section-title-ar fade-in">كل ما تحتاجه</div>
   <div class="features-grid fade-in">
     <div class="feature-card">
       <div class="feature-icon">🎴</div>
-      <div class="feature-title">DRAG-TO-PEEK</div>
-      <div class="feature-desc">A satisfying card mechanic — drag up to reveal your role, release to hide it. No tapping through awkward menus.</div>
+      <div class="feature-title" data-en="DRAG-TO-PEEK" data-ar="اسحب لتكشف">DRAG-TO-PEEK</div>
+      <div class="feature-desc" data-en="A satisfying card mechanic — drag up to reveal your role, release to hide it. No tapping through awkward menus." data-ar="ميكانيكية بطاقة ممتعة — اسحب للأعلى لكشف دورك، اتركها لإخفائه.">A satisfying card mechanic — drag up to reveal your role, release to hide it. No tapping through awkward menus.</div>
     </div>
     <div class="feature-card">
       <div class="feature-icon">🌍</div>
-      <div class="feature-title">BILINGUAL</div>
-      <div class="feature-desc">Full Arabic and English support, RTL layout included. Switch languages at any time from the main menu.</div>
+      <div class="feature-title" data-en="BILINGUAL" data-ar="ثنائي اللغة">BILINGUAL</div>
+      <div class="feature-desc" data-en="Full Arabic and English support, RTL layout included. Switch languages at any time from the main menu." data-ar="دعم كامل للعربية والإنجليزية مع تخطيط RTL. غيّر اللغة في أي وقت.">Full Arabic and English support, RTL layout included. Switch languages at any time from the main menu.</div>
     </div>
     <div class="feature-card">
       <div class="feature-icon">📱</div>
-      <div class="feature-title">OFFLINE READY</div>
-      <div class="feature-desc">Install as a PWA and play anywhere — no internet needed. Everything runs on-device.</div>
+      <div class="feature-title" data-en="OFFLINE READY" data-ar="يعمل بلا إنترنت">OFFLINE READY</div>
+      <div class="feature-desc" data-en="Install as a PWA and play anywhere — no internet needed. Everything runs on-device." data-ar="ثبّتها كـ PWA والعب في أي مكان — لا تحتاج إنترنت. كل شيء على الجهاز.">Install as a PWA and play anywhere — no internet needed. Everything runs on-device.</div>
     </div>
     <div class="feature-card">
       <div class="feature-icon">🕵️</div>
-      <div class="feature-title">MULTIPLE SPIES</div>
-      <div class="feature-desc">Configure 1 or more spies for a harder game. Balance the tension against your group size.</div>
+      <div class="feature-title" data-en="MULTIPLE SPIES" data-ar="جواسيس متعددون">MULTIPLE SPIES</div>
+      <div class="feature-desc" data-en="Configure 1 or more spies for a harder game. Balance the tension against your group size." data-ar="اختر جاسوساً واحداً أو أكثر لصعوبة أعلى. وازن التوتر حسب المجموعة.">Configure 1 or more spies for a harder game. Balance the tension against your group size.</div>
     </div>
     <div class="feature-card">
       <div class="feature-icon">🌙</div>
-      <div class="feature-title">DARK / LIGHT MODE</div>
-      <div class="feature-desc">Toggle between a dark spy aesthetic and a bright daytime mode directly from the main menu.</div>
+      <div class="feature-title" data-en="DARK / LIGHT MODE" data-ar="وضع داكن / فاتح">DARK / LIGHT MODE</div>
+      <div class="feature-desc" data-en="Toggle between a dark spy aesthetic and a bright daytime mode directly from the main menu." data-ar="بدّل بين الوضع الداكن والفاتح من القائمة الرئيسية.">Toggle between a dark spy aesthetic and a bright daytime mode directly from the main menu.</div>
     </div>
     <div class="feature-card">
       <div class="feature-icon">🎲</div>
-      <div class="feature-title">12 CATEGORIES</div>
-      <div class="feature-desc">From food and animals to movies and video games — pick a category or let it randomize.</div>
+      <div class="feature-title" data-en="12 CATEGORIES" data-ar="12 فئة">12 CATEGORIES</div>
+      <div class="feature-desc" data-en="From food and animals to movies and video games — pick a category or let it randomize." data-ar="من الطعام والحيوانات إلى الأفلام والألعاب — اختر أو اتركه يختار عشوائياً.">From food and animals to movies and video games — pick a category or let it randomize.</div>
     </div>
   </div>
 </section>
@@ -345,8 +402,8 @@ footer{
 <!-- CATEGORIES -->
 <section id="categories" class="full-width" style="padding-top:0;padding-bottom:80px;">
   <div style="max-width:860px;margin:0 auto;padding:0 24px;">
-    <div class="section-label fade-in">Categories</div>
-    <div class="section-title fade-in">150+ secret words.</div>
+    <div class="section-label fade-in" data-en="Categories" data-ar="الفئات">Categories</div>
+    <div class="section-title fade-in" data-en="150+ secret words." data-ar="+150 كلمة سرية">150+ secret words.</div>
     <div class="section-title-ar fade-in" style="margin-bottom:24px;">أكثر من 150 كلمة سرية</div>
   </div>
   <div class="cat-scroll fade-in">
@@ -368,11 +425,15 @@ footer{
 <!-- CTA -->
 <div id="cta">
   <div class="hero-eye" style="font-size:56px;margin-bottom:16px;">🕵️</div>
-  <div class="hero-en fade-in">YOUR MOVE</div>
+  <div class="hero-en fade-in" data-en="YOUR MOVE" data-ar="هيا نلعب">YOUR MOVE</div>
   <div class="hero-ar fade-in" style="font-size:clamp(30px,6vw,50px);">هيا نلعب</div>
-  <p class="fade-in">Free. No account. Works on any phone. Pass it around the table and play.</p>
+  <p class="fade-in" data-en="Free. No account. Works on any phone. Pass it around the table and play." data-ar="مجاني. بدون حساب. يعمل على أي هاتف. مرّره حول الطاولة والعبوا.">Free. No account. Works on any phone. Pass it around the table and play.</p>
   <div class="hero-btns fade-in">
-    <a class="btn-main" href="jasoos-1.html">🎮 Open Jasoos</a>
+    <a class="btn-main" href="jasoos-1.html" data-en="🎮 Play Game" data-ar="🎮 العب الآن">🎮 Play Game</a>
+    <div class="hero-btns-secondary">
+      <button class="btn-ghost" onclick="doInstall()" data-en="⬇️ Download App" data-ar="⬇️ تحميل اللعبة">⬇️ Download App</button>
+      <a class="btn-ghost" href="https://github.com/kayo-isle/jasoos" target="_blank" rel="noopener" data-en="⭐ See More" data-ar="⭐ المزيد">⭐ See More</a>
+    </div>
   </div>
 </div>
 
@@ -380,43 +441,98 @@ footer{
 <footer>
   <div class="footer-logo">🕵️ JASOOS · جاسوس</div>
   <div class="footer-links">
-    <a href="jasoos-1.html">Open App</a>
-    <a href="#how">How to Play</a>
+    <a href="jasoos-1.html" data-en="Open App" data-ar="افتح اللعبة">Open App</a>
+    <a href="#how" data-en="How to Play" data-ar="كيف تلعب">How to Play</a>
+    <a href="https://github.com/kayo-isle/jasoos" target="_blank" rel="noopener" data-en="GitHub" data-ar="غيتهاب">GitHub</a>
   </div>
-  <div class="footer-copy">Built free, for everyone · No account · No ads · Works offline</div>
+  <div class="footer-copy" data-en="Built free, for everyone · No account · No ads · Works offline" data-ar="مجاني للجميع · بدون حساب · بدون إعلانات · يعمل بلا إنترنت">Built free, for everyone · No account · No ads · Works offline</div>
 </footer>
 
 <script>
+// ── State ──
+let isArabic = false;
+let isLight = false;
+
+// ── Lang Toggle ──
+function toggleLang() {
+  isArabic = !isArabic;
+  const html = document.documentElement;
+  if (isArabic) {
+    html.setAttribute('lang', 'ar');
+    html.setAttribute('dir', 'rtl');
+    document.getElementById('lang-toggle-label').textContent = 'EN';
+    document.getElementById('lang-toggle-btn').classList.add('active');
+  } else {
+    html.setAttribute('lang', 'en');
+    html.setAttribute('dir', 'ltr');
+    document.getElementById('lang-toggle-label').textContent = 'ع';
+    document.getElementById('lang-toggle-btn').classList.remove('active');
+  }
+  // Update all elements with data-en / data-ar
+  document.querySelectorAll('[data-en]').forEach(el => {
+    el.textContent = isArabic ? el.dataset.ar : el.dataset.en;
+  });
+  // Hide redundant static Arabic subtitle/hero text when in Arabic mode
+  document.querySelectorAll('.section-title-ar, .hero-ar').forEach(el => {
+    el.style.display = isArabic ? 'none' : '';
+  });
+  // Hide inline .ar spans inside steps/features (they're already shown via data-ar on parent)
+  document.querySelectorAll('.step-body .ar').forEach(el => {
+    el.style.display = isArabic ? 'none' : '';
+  });
+}
+
+// ── Theme Toggle ──
+function toggleTheme() {
+  isLight = !isLight;
+  document.documentElement.classList.toggle('light', isLight);
+  document.getElementById('theme-toggle-label').textContent = isLight ? '🌙' : '☀️';
+  document.getElementById('theme-toggle-btn').classList.toggle('active', isLight);
+  // Update meta theme-color
+  document.querySelector('meta[name="theme-color"]').content = isLight ? '#f5f0e8' : '#0d1117';
+}
+
 // ── PWA Install ──
-let deferredPrompt=null;
-window.addEventListener('beforeinstallprompt',e=>{
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
-  deferredPrompt=e;
-  document.getElementById('install-banner').style.display='flex';
-  document.getElementById('hero-install-btn').style.display='inline-flex';
+  deferredPrompt = e;
+  document.getElementById('install-banner').style.display = 'flex';
 });
-function doInstall(){
-  if(!deferredPrompt)return;
+function doInstall() {
+  if (!deferredPrompt) {
+    alert(isArabic
+      ? 'افتح قائمة المتصفح واختر "إضافة إلى الشاشة الرئيسية" لتثبيت اللعبة.'
+      : 'Open your browser menu and tap "Add to Home Screen" to install the app.');
+    return;
+  }
   deferredPrompt.prompt();
-  deferredPrompt.userChoice.then(()=>{deferredPrompt=null;hideBanner();});
+  deferredPrompt.userChoice.then(() => { deferredPrompt = null; hideBanner(); });
 }
-function hideBanner(){
-  document.getElementById('install-banner').style.display='none';
+function hideBanner() {
+  document.getElementById('install-banner').style.display = 'none';
 }
-document.getElementById('install-btn').addEventListener('click',doInstall);
-document.getElementById('hero-install-btn').addEventListener('click',doInstall);
-document.getElementById('install-dismiss').addEventListener('click',hideBanner);
-window.addEventListener('appinstalled',hideBanner);
+document.getElementById('install-btn').addEventListener('click', doInstall);
+document.getElementById('install-dismiss').addEventListener('click', hideBanner);
+window.addEventListener('appinstalled', hideBanner);
+
+// ── Mobile nav CTA ──
+function checkMobileNav() {
+  const el = document.getElementById('nav-cta-mobile');
+  if (el) el.style.display = window.innerWidth <= 600 ? 'inline-flex' : 'none';
+}
+window.addEventListener('resize', checkMobileNav);
+checkMobileNav();
 
 // ── Scroll fade in ──
-const observer=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
-},{threshold:0.12});
-document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
 // ── SW Registration ──
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js').catch(()=>{});
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 </script>
 </body>

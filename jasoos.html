@@ -148,6 +148,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:1000;
 }
 .name-card.is-dragging{cursor:grabbing;box-shadow:0 32px 80px rgba(0,0,0,0.75),inset 0 1px 0 rgba(200,168,75,0.2);}
 .name-card.is-snapping{transition:transform .42s cubic-bezier(.12,1.25,.4,1);}
+/* Blocks role card from being seen during snap-back and card transitions */
+#role-card.covered::after{content:'';position:absolute;inset:0;border-radius:24px;background:var(--bg3);z-index:10;}
 .name-card.is-entering{animation:nc-enter .4s cubic-bezier(.12,1.25,.4,1);}
 @keyframes nc-enter{from{transform:translateY(50px);opacity:0}to{transform:translateY(0);opacity:1}}
 
@@ -595,6 +597,9 @@ function buildRevealProgress(){
 function loadRevealCard(){
   cardPeeked=false;
   const nc=document.getElementById('name-card');
+  const rc=document.getElementById('role-card');
+  // Immediately cover the role card so next player can't see it during enter animation
+  rc.classList.add('covered');
   nc.classList.remove('is-snapping','is-dragging','is-entering');
   nc.style.transform='translateY(0)';
   document.getElementById('next-player-btn').style.display='none';
@@ -616,7 +621,11 @@ function loadRevealCard(){
   });
   void nc.offsetWidth;
   nc.classList.add('is-entering');
-  nc.addEventListener('animationend',()=>nc.classList.remove('is-entering'),{once:true});
+  nc.addEventListener('animationend',()=>{
+    nc.classList.remove('is-entering');
+    // Now safe to uncover — name card is fully settled on top
+    rc.classList.remove('covered');
+  },{once:true});
 }
 
 function nextPlayer(){
@@ -665,9 +674,13 @@ function dragEnd(){
   isDragging=false;
   nameCard.classList.remove('is-dragging');
   nameCard.classList.add('is-snapping');
+  // Cover the role card immediately so it's hidden as name card snaps back
+  document.getElementById('role-card').classList.add('covered');
   nameCard.style.transform='translateY(0)';
   nameCard.addEventListener('transitionend',()=>{
     nameCard.classList.remove('is-snapping');
+    // Uncover only after name card is fully back in place
+    document.getElementById('role-card').classList.remove('covered');
     if(cardPeeked){
       document.getElementById('hold-hint-el').style.display='none';
       const btn=document.getElementById('next-player-btn');
