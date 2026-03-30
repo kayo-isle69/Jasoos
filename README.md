@@ -7,8 +7,8 @@
 
 ---
 
-[![Landing Page](https://img.shields.io/badge/🌐_Landing_Page-kayo--isle.github.io%2Fjasoos-c8a84b?style=for-the-badge&labelColor=0d1117)](https://kayo-isle.github.io/Jasoos)
-[![Play Now](https://img.shields.io/badge/🎮_Play_Now-Open_App-4caf7d?style=for-the-badge&labelColor=0d1117)](https://kayo-isle.github.io/jasoos/jasoos.html)
+[![Landing Page](https://img.shields.io/badge/🌐_Landing_Page-kayo--isle.github.io%2Fjasoos-c8a84b?style=for-the-badge&labelColor=0d1117)](https://kayo-isle69.github.io/Jasoos)
+[![Play Now](https://img.shields.io/badge/🎮_Play_Now-Open_App-4caf7d?style=for-the-badge&labelColor=0d1117)](https://kayo-isle69.github.io/jasoos/jasoos.html)
 
 ---
 
