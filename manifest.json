@@ -2,25 +2,40 @@
   "name": "Jasoos · جاسوس",
   "short_name": "Jasoos",
   "description": "The spy party game — play with friends, offline, no account needed.",
-  "start_url": "./jasoos-1.html",
+  "start_url": "./jasoos.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#0d1117",
   "theme_color": "#0d1117",
   "orientation": "portrait",
   "lang": "en",
+  "dir": "ltr",
+  "id": "com.komino.jasoos",
   "categories": ["games", "entertainment"],
   "icons": [
     {
       "src": "icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
   "screenshots": [],
@@ -29,8 +44,9 @@
       "name": "Play Now",
       "short_name": "Play",
       "description": "Start a new game of Jasoos",
-      "url": "./jasoos-1.html",
+      "url": "./jasoos.html",
       "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
     }
-  ]
+  ],
+  "prefer_related_applications": false
 }

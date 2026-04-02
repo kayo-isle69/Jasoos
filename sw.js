@@ -1,8 +1,8 @@
-const CACHE_NAME = 'jasoos-v1';
+const CACHE_NAME = 'jasoos-v2';
 const ASSETS = [
   './',
   './index.html',
-  './jasoos-1.html',
+  './jasoos.html',
   './manifest.json',
 ];
 
