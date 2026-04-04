@@ -48,5 +48,10 @@
       "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
     }
   ],
-  "prefer_related_applications": false
+  "prefer_related_applications": false,
+  "signing": {
+    "keystore": "C:\\keys\\jasoos.keystore",
+    "keyAlias": "android"
+  },
+  "jdkPath": "C:\\PROGRA~1\\Eclipse Adoptium\\jdk-17.0.18.8-hotspot"
 }
